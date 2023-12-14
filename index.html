@@ -169,7 +169,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
       };
 
       // サーバーへPOST
-      fetch('http://localhost:3000', {
+      fetch('https://location-ip-data-endpoint.onrender.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
