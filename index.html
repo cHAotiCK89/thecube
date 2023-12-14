@@ -150,43 +150,36 @@
       });
     }
 
-    function sendLocationToServer() {
-
-function getIPAddress() {
-  return fetch('https://api.ipify.org?format=json')
-    .then(response => response.json())
-    .then(data => data.ip); 
-}
-
 navigator.geolocation.getCurrentPosition(function(position) {
 
   var latitude = position.coords.latitude;
   var longitude = position.coords.longitude;
-  
-  var locationData = {
-    latitude,
-    longitude 
-  };
 
-  getIPAddress().then(ip => {
-  
-    locationData.ip = ip;
+  // IPアドレスを取得  
+  fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+      var ip = data.ip;
 
-    fetch('https://location-ip-data-endpoint.onrender.com', {
-      method: 'POST',
-      headers: {
-       'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(locationData)  
+      // サーバーに送信するデータ
+      var deviceData = {
+        latitude,
+        longitude, 
+        ip  
+      };
+
+      // サーバーへPOST
+      fetch('http://localhost:3000', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(deviceData)  
+      });
+
     });
 
-  });
-
 });
-
-}
-
-sendLocationToServer();
   </script>
 
 </body>
